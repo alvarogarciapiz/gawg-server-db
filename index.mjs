@@ -24,7 +24,7 @@ export const handler = async (event) => {
   const params = {
     TableName: 'gawg', // Actualizar el nombre de la tabla
     Item: {
-      id: formData.repositoryFullName, // Generar un ID único
+      id: formData.repositoryFullName, // Generar un ID único con el username/repositoryName
       ...formData
     }
   };
