@@ -3,7 +3,20 @@ import AWS from 'aws-sdk';
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 export const handler = async (event) => {
-  console.log('Received event:', JSON.stringify(event, null, 2)); // Log the event for debugging
+  console.log('Received event:', JSON.stringify(event, null, 2));
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://gawg.lvrpiz.com, https://www.gawg.lvrpiz.com',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST,OPTIONS'
+      },
+      body: ''
+    };
+  }
 
   let formData;
   try {
@@ -13,7 +26,7 @@ export const handler = async (event) => {
     return {
       statusCode: 400,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://gawg.lvrpiz.com, https://www.gawg.lvrpiz.com',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST,OPTIONS'
       },
@@ -22,9 +35,9 @@ export const handler = async (event) => {
   }
 
   const params = {
-    TableName: 'gawg', // Actualizar el nombre de la tabla
+    TableName: 'gawg',
     Item: {
-      id: formData.repositoryFullName, // Generar un ID único con el username/repositoryName
+      id: formData.repositoryFullName,
       ...formData
     }
   };
@@ -34,7 +47,7 @@ export const handler = async (event) => {
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://gawg.lvrpiz.com, https://www.gawg.lvrpiz.com',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST,OPTIONS'
       },
@@ -45,7 +58,7 @@ export const handler = async (event) => {
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://gawg.lvrpiz.com, https://www.gawg.lvrpiz.com',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST,OPTIONS'
       },
